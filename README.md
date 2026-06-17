@@ -107,4 +107,4 @@ Every major component should be understandable, modifiable, and replaceable.
 
 ## License 
 
-MIT
+[MIT](https://github.com/Felicia-Ainslie/fai-agent-platform/blob/main/LICENSE)
