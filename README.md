@@ -1,6 +1,6 @@
 # FAI Agent Platform
 
-FAI Agent Platform is a from-scratch AI experimentation project written in TypeScript. 
+Felicia Ainslie Insights (FAI) Agent Platform is a from-scratch AI experimentation project written in TypeScript. 
 
 ---
 
