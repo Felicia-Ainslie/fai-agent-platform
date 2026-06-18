@@ -170,4 +170,4 @@ TOKENS:
 
 ## License 
 
-[MIT](https://github.com/Felicia-Ainslie/fai-agent-platform/blob/main/LICENSE
+[MIT](https://github.com/Felicia-Ainslie/fai-agent-platform/blob/main/LICENSE)
