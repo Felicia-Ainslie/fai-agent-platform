@@ -1,8 +1,14 @@
-//This is a reusable simple tokenizer that can be used between agents for shared text-to-token logic. 
+/** 
+ * V1 Tokenizer
+ * This is a reusable whitespace tokenizer that can be used between agents for shared text-to-token logic. 
+ * This is simple and easy to implement for expedited concept testing, but has poor vocab quality, cannot handle puncuation well, and has weak learning value.
+ * See v2 tokenizer in "ruleTokenizer.ts"
+*/
 
 export type Token = string;
 
-/* SimpleTokenizer v1
+/**
+ * SimpleTokenizer v1
  * 
  * Purpose:
  * - Start from scratch with understandable tokenization.

@@ -1,6 +1,6 @@
 //This is a reusable tiny local inference engine that can be used between agents for shared inference logic. 
 
-import { SimpleTokenizer } from "../tokenizer/simpleTokenizer";
+import { RuleTokenizer } from "../tokenizer/ruleTokenizer";
 
 /**
  * TinyLocalModel v1
@@ -23,7 +23,7 @@ import { SimpleTokenizer } from "../tokenizer/simpleTokenizer";
  */
 
 export class TinyLocalModel {
-    private tokenizer = new SimpleTokenizer();
+    private tokenizer = new RuleTokenizer();
 
     generate(input: string): string {
         const tokens = this.tokenizer.encode(input);
