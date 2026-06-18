@@ -162,11 +162,16 @@ TOKENS:
 
 ### Phase 4 - Specialized Agents
 
-- [ ] Fishkeeping Agent
 - [ ] Product Manager Agent v2
 - [ ] Release Manager Agent
 - [ ] Fishkeeping Agent
 - [ ] Kid safe "Ask Mom" Agent
+
+### Phase 5 - Language Modeling Experiments
+- [ ] BPE Tokenizer
+- [ ] WordPiece Tokenizer
+- [ ] Unigram Tokenizer
+- [ ] FAI Tokenizer
 
 ## License 
 
