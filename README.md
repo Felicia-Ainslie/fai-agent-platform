@@ -85,7 +85,7 @@ Every major component should be understandable, modifiable, and replaceable.
 
 ### Phase 2 - Language Modeling
 
-- [ ] Enhanced Tokenizer
+- [x] Enhanced Tokenizer
 - [ ] Vocabulary Builder
 - [ ] N-Gram Prediction
 - [ ] Model Evaluation
