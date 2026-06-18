@@ -27,33 +27,37 @@ The long-term goal is to create reusable AI agents without relying on OpenAI, Ol
 ### Implemented
 
 - Express API server
+- Agent Framework
 - Product Manager Agent
 - Input Valudation
-- Custom tokenizer
+- Custom & Rule based tokenizers
 - Local model placeholder
 - Reusable agent architecture
 
 ### Planned
 
-- Improved tokenizer
+- Vocabulary system
+- BPE tokenizer
 - N-gram prediction engine
-- Trainable local model
+- Trainable local language model
 - Expanded Agent collection
+- Embeddings
+- Transformer
 - Persistent memory
 - Web interface
 
 ----
 
-## Project Structure
+## Architecture
 
-```text
+```txt
 src/
 |__ agents/
 |__ api/
 |__ core/
-|   |__ agent/
-|   |__ model/
-|   |__ tokenizer/
+|  |__ agent/
+|  |__ model/
+|  |__ tokenizer/
 |-- security/
 ```
 
@@ -70,6 +74,65 @@ This project prioritizes:
 - Low operating costs
 
 Every major component should be understandable, modifiable, and replaceable. 
+
+---
+
+## Running the Application
+
+```bash
+npm install
+```
+Start the API:
+
+```bash
+npm run dev
+```
+
+Expected: 
+
+```txt
+FAI agent platform running on port 3001
+```
+
+---
+
+### Testing the Product Manager Agent
+
+Send a test request:
+
+```bash
+curl -X POST http://localhost:3001/chat/product-manager \
+  -H "Content-Type: application/json" \
+  -d '{"message":"POST /chat/product-manager works, right?}'
+```
+
+---
+
+### Tokenizer Demo
+
+The tokenizer can be executed independently from the API.
+
+Purpose:
+- Verify rule based tokenizer behavior
+- Experiment with tokenizer rules
+- Compare tokenizer versions
+- Regression testing while building later AI layers.
+
+Run:
+
+```bash
+npx tsx src/core/tokenizer/ruleTokenizer.demo.ts
+```
+
+Example output:
+
+```txt
+INPUT: 
+Hello, world! 
+
+TOKENS:
+["hello", ",", "world", "!"]
+```
 
 ---
 
@@ -107,4 +170,4 @@ Every major component should be understandable, modifiable, and replaceable.
 
 ## License 
 
-[MIT](https://github.com/Felicia-Ainslie/fai-agent-platform/blob/main/LICENSE)
+[MIT](https://github.com/Felicia-Ainslie/fai-agent-platform/blob/main/LICENSE
