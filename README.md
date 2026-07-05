@@ -144,6 +144,53 @@ curl -X POST http://localhost:3001/chat/product-manager \
   -d '{"message":"POST /chat/product-manager works, right?"}'
 ```
 
+Expected response structure:
+
+```json
+{
+  "response": "Local FAI model response:
+
+I tokenized your message into X tokens.
+
+Tokens:
+agent
+config
+role
+...
+post
+/chat/product
+-
+manager
+works
+,
+right
+?
+
+Next model step: replace this placeholder with a trained local text generator:
+}
+```
+
+Notes:
+- Token count may change as tokenizer rules evolve.
+- System prompt tokens currently appear because the Product Manager agent prompt and user message are combined before tokenization.
+- Seeing words such as:
+  - agent
+  - config
+  - role
+  - product
+  - artifacts
+ 
+  indicates the system prompt is being included correctly.
+
+- Seeing:
+  - post
+  - /chat/product
+  - manager
+  - works
+  - ?
+ 
+  indicates the user message is being tokenized correctly.
+
 ---
 
 ## Tokenizer Demo
@@ -170,6 +217,9 @@ Hello, world!
 
 TOKENS:
 ["hello", ",", "world", "!"]
+
+DECODED:
+hello, world!
 ```
 
 ---
