@@ -159,7 +159,16 @@ Version["Version 0.1"]
   Tokenizer --> Model
   Model --> Response["HTTP Response"]
 
-style Version fill:#dae8fc
+style Version stroke:#58a6ff, stroke-width:3px
+style API stroke:#58a6ff
+style Validation stroke:#d29922
+style Agent stroke:#3fb950
+style PM stroke:#3fb950
+style Model stroke:#f85149
+style Tokenizer stroke:#a371f7
+style Response stroke:#58a6ff
+
+
 ```
 
 ---
