@@ -31,8 +31,8 @@ export function createAgent(config: AgentConfig) {
     return {
         run(message: string): string {
             const framedPrompt = [ 
-                'Agent: ${config.name}',
-                'Role: ${config.role}',
+                `Agent: ${config.name}`,
+                `Role: ${config.role}`,
                 "",
                 "Rules:",
                 ...config.rules.map((rule) => `- ${rule}`),

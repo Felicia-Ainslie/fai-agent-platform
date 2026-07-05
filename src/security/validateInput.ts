@@ -13,10 +13,15 @@ export function validateChatInput(input: unknown) {
         throw new Error("Invalid input: 'message' must be a string.");
     }
 
-    const len = message.length;
+    // Normalize input by removing leading and trailing whitespace.
+    // This prevents blank messages like "   " from being accepted. 
+    const trimmedMessage = message.trim();
+
+    // Measure the sanitized message, not the raw user input.
+    const len = trimmedMessage.length;
     if (len < 1 || len > 4000) {
         throw new Error("Invalid input: 'message' length must be between 1 and 4000 characters.");
     }
 
-    return { message };
+    return { message: trimmedMessage };
 }
