@@ -114,6 +114,69 @@ Research and compare multiple tokenization strategies.
 
 The next milestones are focused on turning this prototype into a more capable local agent platform:
 
+
+**Version 0.1:** Early Prototype
+
+This checklist serves as both the development roadmap and the current implementation status.
+
+### Phase 1 - Foundation
+
+Build the core framework required for every future AI component.
+
+- [x] Express API
+- [x] Agent framework
+- [x] Product manager agent
+- [x] <code>POST /chat/product-manager</code> endpoint
+- [x] Input validation
+- [x] Simple tokenizer (learning implementation)
+- [x] Local placeholder language model
+- [x] Reusable agent architecture
+- [x] Basic Unit Tests
+
+**Status:** Complete
+
+### Phase 2 - Language Modeling
+
+Expand the local model beyond simple rules into a statistical language model.
+
+- [x] Enhanced tokenizer
+- [ ] Vocabulary builder
+- [ ] Token frequency analysis
+- [ ] N-Gram prediction engine
+- [ ] Model evaluation franework
+
+**Current Focus:** Building a reusable vocabulary system.
+
+### Phase 3 - Neural Networks
+
+Transition from handcrafted rules into trainable machine learning models.
+
+- [ ] Trainable neural language model
+- [ ] Learned embeddings
+- [ ] Attention experiments
+- [ ] Transformer research
+
+### Phase 4 - Specialized Agents
+
+Expand the platform into reusable domain-specific AI agents.
+
+- [ ] Product Manager Agent v2
+- [ ] Fishkeeping Agent
+- [ ] Kid safe "Ask Mom" Agent
+
+### Phase 5 - Language Modeling Experiments
+
+Research and compare multiple tokenization strategies.
+
+- [ ] BPE Tokenizer
+- [ ] WordPiece Tokenizer
+- [ ] Unigram Tokenizer
+- [ ] FAI Tokenizer (custom implementation)
+
+### Roadmap
+
+The next milestones are focused on turning this prototype into a more capable local agent platform:
+
 1. Build a stronger local inference layer using n-gram or neural methods.
 2. Introduce a reusable vocabulary system and token IDs to support more realistic model inputs.
 3. Expand the agent framework so new agents can be added with minimal duplication.
@@ -168,6 +231,7 @@ style PM stroke:#3fb950
 style Model stroke:#f85149
 style Tokenizer stroke:#a371f7
 style Response stroke:#58a6ff
+
 
 ```
 
