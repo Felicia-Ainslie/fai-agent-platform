@@ -17,7 +17,7 @@ Felicia Ainslie Insights (FAI) Platform is a from-scratch TypeScript project for
     - [Initialization versus request flow](#initialization-versus-request-flow)
   - [Running the Application](#running-the-application)
   - [Testing the Product Manager Agent](#testing-the-product-manager-agent)
-  - [Tokenizer Demos](#tokenizer-demos)
+  - [Tokenizer Demo](#tokenizer-demo)
   - [License](#license)
 
 ## Goal
@@ -195,15 +195,26 @@ The next milestones are focused on turning this prototype into a more capable lo
 
 ## Architecture
 
-The current structure separates responsibilities so each layer can evolve as the project grows. This is a learning architecture, not a fully pluggable dependency-injection system yet.
+The current structure is intentionally simple and is organized by responsibility rather than feature, making individual AI components easy to replace or extend as the platform evolves.
 
-- [src/index.ts](src/index.ts) boots Express, configures CORS and JSON parsing, exposes `/health`, and mounts the chat routes.
-- [src/api/chat.ts](src/api/chat.ts) validates each request and wraps the agent result in a JSON response.
+- [src/index.ts](src/index.ts) boots the Express server and mounts the chat routes.
+- [src/api/chat.ts](src/api/chat.ts) handles HTTP requests for agent interactions.
 - [src/security/validateInput.ts](src/security/validateInput.ts) validates incoming chat payloads.
-- [src/agents/product-manager/index.ts](src/agents/product-manager/index.ts) supplies the active agent name, role, and rules. It calls `createAgent(config)` once when the module loads, then reuses that agent for requests.
-- [src/core/agent/createAgent.ts](src/core/agent/createAgent.ts) constructs a `TinyLocalModel` and returns an agent with a `run(message)` method. Each run combines the configuration and user message into a framed prompt.
-- [src/core/model/tinyLocalModel.ts](src/core/model/tinyLocalModel.ts) constructs a `RuleTokenizer`. Its `generate()` method tokenizes the framed prompt and reports those tokens; it is not a trained language model and does not follow the instructions semantically.
-- [src/core/tokenizer/ruleTokenizer.ts](src/core/tokenizer/ruleTokenizer.ts) is the current tokenizer. [SimpleTokenizer](src/core/tokenizer/simpleTokenizer.ts) remains available as the earlier implementation for comparison.
+- [src/agents/product-manager/index.ts](src/agents/product-manager/index.ts) defines the current domain-specific agent.
+- [src/core/agent/createAgent.ts](src/core/agent/createAgent.ts) provides a reusable agent wrapper.
+- [src/core/model/tinyLocalModel.ts](src/core/model/tinyLocalModel.ts) acts as a local inference placeholder. It tokenizes input and returns a formatted response, but it does not learn or generate meaningfully yet.
+- [src/core/tokenizer/ruleTokenizer.ts](src/core/tokenizer/ruleTokenizer.ts) converts text into predictable tokens for experimentation and future model work.
+
+Additional implementation details:
+
+- `src/index.ts` configures CORS and JSON parsing and exposes `/health`.
+- `src/api/chat.ts` validates each request and wraps the agent result in a JSON response.
+- `src/agents/product-manager/index.ts` supplies the active agent name, role, and rules. It calls `createAgent(config)` once when the module loads, then reuses that agent for requests.
+- `src/core/agent/createAgent.ts` constructs a `TinyLocalModel` and returns an agent with a `run(message)` method. Each run combines the configuration and user message into a framed prompt.
+- `src/core/model/tinyLocalModel.ts` constructs a `RuleTokenizer`. Its `generate()` method tokenizes the framed prompt and reports those tokens; it is not a trained language model and does not follow the instructions semantically.
+- `RuleTokenizer` is the current tokenizer. [SimpleTokenizer](src/core/tokenizer/simpleTokenizer.ts) remains available as the earlier implementation for comparison.
+
+<br>
 
 ### Initialization versus request flow
 
@@ -211,23 +222,45 @@ The factory is called during module initialization, not after validation on ever
 
 ```mermaid
 flowchart TD
+
+Version["Version 0.1"]
+
   subgraph Initialization["Module initialization (once per module instance)"]
-    Config["Product Manager config: name, role, rules<br/>src/agents/product-manager/index.ts"] --> Factory["createAgent(config)<br/>src/core/agent/createAgent.ts"]
-    Factory --> Instances["Create reusable agent + TinyLocalModel + RuleTokenizer"]
+    Config["Product Manager config: name, role, rules<br/>src/agents/product-manager/index.ts"] --> Agent["Agent Factory
+<code>src/core/agent/createAgent.ts</code>"]
   end
 
   subgraph Requests["For each POST /chat/product-manager request"]
-    Client["Client"] --> API["Express route<br/>src/api/chat.ts"]
-    API --> Validation["validateChatInput<br/>src/security/validateInput.ts"]
-    Validation --> PM["runProductManagerAgent(message)"]
-    PM --> Run["Existing agent.run(message)<br/>Frame config + user message"]
-    Run --> Model["TinyLocalModel.generate(prompt)<br/>src/core/model/tinyLocalModel.ts"]
-    Model --> Tokenizer["RuleTokenizer.encode(prompt)"]
-    Tokenizer --> Format["Model formats token report"]
-    Format --> Response["Route sends JSON: { response }"]
+  Client["Client / Chat Initiated"] --> API["Express API
+<code>src/api/chat.ts</code>"]
+
+  API --> Validation["Input Validation
+<code>src/security/validateInput.ts</code>"]
+  Validation --> PM["Product Manager Agent
+<code>src/agents/product-manager/</code>"]
+  PM --> Run["Existing agent.run(message)<br/>Frame config + user message"]
+  Run --> Model["Tiny Local Model
+<code>src/core/model/tinyLocalModel.ts</code>"]
+  Model --> Tokenizer["Rule Tokenizer
+<code>src/core/tokenizer/ruleTokenizer.ts</code>"]
+  Tokenizer --> Model
+  Model -->|"Token report returned through agent and route as JSON: { response }"| Response["HTTP Response"]
   end
 
-  Instances -. reused by .-> Run
+  Agent -. returns reusable agent .-> Run
+  Agent -. creates once .-> Model
+  Agent -. creates once .-> Tokenizer
+
+style Version stroke:#58a6ff, stroke-width:3px
+style API stroke:#58a6ff
+style Validation stroke:#d29922
+style Agent stroke:#3fb950
+style PM stroke:#3fb950
+style Model stroke:#f85149
+style Tokenizer stroke:#a371f7
+style Response stroke:#58a6ff
+
+
 ```
 
 **Where to swap implementations:** the model is currently selected by its import and construction in `createAgent.ts`; the tokenizer is selected in `tinyLocalModel.ts`. Both tokenizers expose `encode()` and `decode()` for string tokens, but there is no shared interface or runtime selector yet. Keeping these responsibilities separate makes later experiments easier without claiming those future extension points already exist.
@@ -240,11 +273,13 @@ flowchart TD
 
 Use Node.js 24.x. The locked test/build tooling is compatible with `^20.19.0 || ^22.12.0 || >=24.0.0`; compatibility with a dependency's engine range is not a claim that every version has been tested.
 
-Install the locked dependencies:
+Install dependencies:
 
 ```bash
-npm ci
+npm install
 ```
+
+Alternatively, install the locked dependencies with `npm ci`.
 
 Optional local configuration:
 
@@ -257,11 +292,13 @@ cp .env.example .env
 | `PORT` | `3001` | API listening port. |
 | `ALLOWED_ORIGIN` | `http://localhost:3000` | Browser origin allowed by the CORS configuration. This is not authentication. |
 
-Start the development API:
+Start the API:
 
 ```bash
 npm run dev
 ```
+
+Expected output:
 
 With the default port, the server's startup message is:
 
@@ -305,7 +342,9 @@ Use your configured port in requests if you change `PORT`.
 
 ## Testing the Product Manager Agent
 
-Send a test request while the API is running:
+Send a test request:
+
+The API needs to be running before sending this request.
 
 ```bash
 curl -X POST http://localhost:3001/chat/product-manager \
@@ -313,7 +352,9 @@ curl -X POST http://localhost:3001/chat/product-manager \
   -d '{"message":"POST /chat/product-manager works, right?"}'
 ```
 
-Expected response with the current agent configuration and tokenizer (the line breaks inside the string are escaped to keep this valid JSON):
+Expected response structure:
+
+This example uses the current agent configuration and tokenizer. The line breaks inside the string are escaped to keep this valid JSON.
 
 ```json
 {
@@ -322,16 +363,52 @@ Expected response with the current agent configuration and tokenizer (the line b
 ```
 
 Notes:
-- The 76 tokens cover the **entire framed prompt**, not just the user's message: agent name, role, rules, framing labels, and message.
-- The active configuration supplies tokens such as `agent`, `role`, `rules`, and `artifacts`; these do not come from the unused `systemPrompt.ts` export. The existing `Seperate` spelling in the active rules is reflected as `seperate` in this example, not silently corrected in the prompt.
-- The route-like text becomes `post`, `/chat`, `/product`, `-`, `manager`, `works`, `,`, `right`, `?`. The tokenizer does not keep the whole route as one token.
-- The count and response will change when the configuration, input, or tokenizer changes. This is a deterministic token report, not a generated Product Manager answer.
+- Token count may change as tokenizer rules evolve.
+- System prompt tokens currently appear because the Product Manager agent prompt and user message are combined before tokenization.
+- Seeing words such as:
+  - agent
+  - rules
+  - role
+  - product
+  - artifacts
+ 
+  indicates the system prompt is being included correctly.
+
+- Seeing:
+  - post
+  - /chat
+  - /product
+  - `-`
+  - manager
+  - works
+  - ,
+  - right
+  - ?
+ 
+  indicates the user message is being tokenized correctly.
+
+
+Here, "system prompt" means the active agent configuration in `product-manager/index.ts`, framed by `createAgent.ts`, not the unused `systemPrompt.ts` export. The 76 tokens cover the **entire framed prompt**, not just the user's message: agent name, role, rules, framing labels, and message.
+
+The existing `Seperate` spelling in the active rules is reflected as `seperate` in this example, not silently corrected in the prompt. The tokenizer does not keep the whole route as one token.
+
+The count and response also change when the configuration or input changes. This is a deterministic token report, not a generated Product Manager answer.
 
 ---
 
-## Tokenizer Demos
+## Tokenizer Demo
 
-Both implementations can be executed independently of the API. The earlier `SimpleTokenizer` demo is preserved under its own name, and the `RuleTokenizer` demo uses the current implementation. They use the same five inputs to make the progression visible:
+The tokenizer can be executed independently from the API.
+
+Purpose:
+- Verify rule-based tokenizer behavior
+- Experiment with tokenizer rules
+- Compare tokenizer versions
+- Support regression testing while building later AI layers
+
+The earlier `SimpleTokenizer` demo is preserved under its own name, and the `RuleTokenizer` demo uses the current implementation. They use the same five inputs to make the progression visible.
+
+Run:
 
 ```bash
 npx tsx src/core/tokenizer/simpleTokenizer.demo.ts
@@ -346,6 +423,8 @@ node dist/core/tokenizer/ruleTokenizer.demo.js
 ```
 
 Both implementations lowercase input by default and split text using regular expressions; `SimpleTokenizer` is not merely a whitespace splitter. The demos print token arrays as JSON so the output can be compared directly.
+
+Example output:
 
 For `Hello, world!`, **SimpleTokenizer (v1)** prints:
 

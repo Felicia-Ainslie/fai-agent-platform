@@ -1,4 +1,4 @@
-// V1: preserve the original demo for the simpler tokenizer implementation.
+// This is a quick manual test for simpleTokenizer.ts
 // Use the same inputs as ruleTokenizer.demo.ts to compare the two approaches.
 
 import { SimpleTokenizer } from "./simpleTokenizer";

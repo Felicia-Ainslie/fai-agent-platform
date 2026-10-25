@@ -1,4 +1,4 @@
-// V2: compare rule-based tokenization with simpleTokenizer.demo.ts.
+// This is a quick manual test for ruleTokenizer.ts
 // Both demos use the same inputs so the progression is easy to inspect.
 
 import { RuleTokenizer } from "./ruleTokenizer";
