@@ -216,11 +216,10 @@ The existing npm scripts are:
 There is no separate lint script. Before proposing changes, run:
 
 ```bash
-npm run test:run -- src
+npm run test:run
 npm run build
+npm run test:run
 ```
-
-**Current test/build limitation:** the build also emits CommonJS copies of the tests into `dist/`. An unfiltered `npm run test:run` succeeds on a clean checkout but, after building, also discovers those generated copies and fails to import Vitest from them. Passing `-- src` runs all current source tests without picking up the compiled duplicates. The existing build and test configuration is unchanged.
 
 Check that the server is responsive:
 
