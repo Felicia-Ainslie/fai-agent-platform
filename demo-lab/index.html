@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Felicia Ainslie · FAI Learning Lab</title>
+<link rel="stylesheet" href="/styles.css">
+<script type="module" src="/app.js">
+</script>
+</head>
+<body>
+<main>
+<header>
+<div class="brand-bar"><div class="brand-identity"><img src="/FA-logo.jpg" alt="Felicia Ainslie FA logo" width="84" height="84"><div><p class="brand-name">Felicia Ainslie</p><p class="brand-descriptor">TECHNICAL PRODUCT LEADER</p></div></div><span class="lab-label">FAI LEARNING LAB</span></div>
+<p class="eyebrow">FAI AGENT PLATFORM / LOCAL EXPERIMENT</p>
+<h1>See each piece work.</h1>
+<p class="intro">One input. Independent demos. A visible record of what each stage can and cannot do.</p>
+<span class="badge">Local only · No external model · No saved conversations</span>
+</header>
+<section class="composer" aria-labelledby="input-label">
+<label id="input-label" for="message">Your test input</label>
+<textarea id="message" maxlength="4000" rows="3" spellcheck="false" placeholder="Try a sentence, a contraction, or text with slashes and hyphens…">I can't wait. POST /chat/product-manager works!</textarea>
+<div class="toolbar">
+<div class="samples">
+<button type="button" data-sample="Hello, world!">Punctuation</button>
+<button type="button" data-sample="I can't wait.">Contractions</button>
+<button type="button" data-sample="POST /chat/product-manager works.">Slashes and hyphens</button>
+</div>
+<div>
+<button id="reset" type="button">Reset results</button>
+<button id="run" class="primary" type="button">Compare all demos</button>
+</div>
+</div>
+<p id="status" role="status" aria-live="polite">Compare all three demos with one input, or use Run this demo for just one row.</p>
+</section>
+<section aria-labelledby="comparison">
+<div class="section-title">
+<h2 id="comparison">Compare the stages</h2>
+<span>Scroll across the table on smaller screens →</span>
+</div>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Stage comparison, horizontally scrollable">
+<table>
+<thead>
+<tr>
+<th>Stage <button class="info" data-help="stage" aria-label="About independent stages">i</button>
+</th>
+<th>Processed input <button class="info" data-help="input" aria-label="About processed input">i</button>
+</th>
+<th>Tokens / count <button class="info" data-help="tokens" aria-label="About tokens">i</button>
+</th>
+<th>Decoded / token report <button class="info" data-help="output" aria-label="About decoded text and token report">i</button>
+</th>
+<th>What this proves <button class="info" data-help="limits" aria-label="About capability limits">i</button>
+</th>
+</tr>
+</thead>
+<tbody id="rows">
+</tbody>
+</table>
+</div>
+</section>
+<footer>Two demos show tokenization and decoding. The agent wiring demo returns a token report, not an AI answer. It runs functions locally, not the HTTP API.</footer>
+<dialog id="help">
+<div class="dialog-head">
+<h2 id="help-title">
+</h2>
+<button id="close-help" aria-label="Close explanation">Close</button>
+</div>
+<div id="help-body">
+</div>
+</dialog>
+</main>
+</body>
+</html>

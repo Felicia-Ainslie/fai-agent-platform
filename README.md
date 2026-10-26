@@ -465,3 +465,42 @@ Use these demos for manual inspection and experimentation alongside the existing
 
 [MIT](https://github.com/Felicia-Ainslie/fai-agent-platform/blob/main/LICENSE)
 
+
+
+---
+
+## Local learning lab: one input, independent demos
+
+This is an additional way to test the Simple and Rule tokenizers, not a replacement for the existing demos, comments or learning phases. The two tokenizer rows and the agent wiring row call the actual TypeScript implementations directly in the browser. There is no custom demo server, adapter, external model call or HTTP API request.
+
+From the repository root:
+
+```bash
+npm ci
+npm run demo:dev
+```
+
+Open the loopback URL printed by Vite (normally **http://127.0.0.1:5173**) in a browser on the same computer. Leave the terminal running and use `Ctrl+C` to stop it. When using the cloud computer from a phone, open its browser, not the phone's own localhost. Vite is a standard development server, not public hosting. It reloads the page when the demo or imported tokenizer code changes.
+
+1. Type one test input, or tap a sample.
+2. Choose **Compare all demos** for both tokenizers and the agent wiring demo, or **Run this demo** for one row. There are no selection checkboxes.
+3. Compare the exact input, string tokens/count and decoded text, or the actual agent token report. Scroll across the table on narrow screens.
+4. Tap or keyboard-focus an **i** button for what the piece does, why it exists, what can change and its limits. Escape or Close dismisses it.
+5. **Reset results** clears results without changing your input. Editing the input marks previous results until you rerun them.
+
+The **Slashes and hyphens** sample is text to tokenize, not an API call. Tokenizer rows preserve empty input and whitespace for experimentation; input is limited to 4000 characters. Neither tokenizer trains a model or generates an answer. The third row, **Agent wiring demo: token report**, calls the existing validateChatInput() and runProductManagerAgent() functions. Validation trims the message and rejects blank input. The existing factory adds its name, role and rules, then TinyLocalModel returns its diagnostic token report unchanged. The full framed prompt is not exposed by the factory, so this UI does not reconstruct it or parse the report into a second token list. This demonstrates function flow, not HTTP transport or generated answers. Original agent and tokenizer source remains unchanged.
+
+The lab has four files: `index.html` provides the page, `app.js` connects its controls directly to the imported tokenizer and agent functions, `styles.css` controls presentation, and `FA-logo.jpg` is the exact local website logo. The site palette is navy, cream and gold. Font names match Playfair Display and Montserrat, with local fallbacks rather than external font requests.
+
+To run the original tests, compile the original project, and build a static version of the lab:
+
+```bash
+npm run test:run
+npm run build
+npm run demo:build
+npm run demo:preview
+```
+
+`demo:build` first type-checks the existing TypeScript source, then writes browser-ready files into ignored `demo-dist/`. The UI's JavaScript is bundled, but is not fully TypeScript-checked. `demo:preview` serves that build locally, normally at **http://127.0.0.1:4173**. Rebuild after source changes before previewing again.
+
+Vite is the one explicit development dependency added for this UI. The existing test tooling already uses that same version. No new framework or application server is involved. Test input is processed in the browser, not sent to a tokenizer endpoint or stored. The development connection used for reloading is separate from your test input. Keep dev and preview bound to `127.0.0.1`; do not expose or deploy these development servers. This change does not publish the lab or integrate it into the live website.
